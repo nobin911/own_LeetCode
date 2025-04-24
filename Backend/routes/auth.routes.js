@@ -8,11 +8,11 @@ import {
   check,
 } from "../controllers/auth.controller.js";
 
-const authRoutes = express.Router();
+const authRouter = express.Router();
 
-authRoutes.post("/register", register);
-authRoutes.post("/login", login);
-authRoutes.post("/logout", logout);
-authRoutes.post("/check", check);
+authRouter.post("/register", register);
+authRouter.post("/login", login);
+authRouter.post("/logout", logout);
+authRouter.post("/check", check);
 
-export default authRoutes;
+export default authRouter;
