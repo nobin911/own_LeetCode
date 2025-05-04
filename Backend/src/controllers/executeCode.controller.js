@@ -103,5 +103,62 @@ export const executeCode = async (req, res) => {
         ? JSON.stringify(detailedResults.map((r) => r.time))
         : null,
     });
-  } catch (error) {}
+
+    //if All passed===true mark problem as solved for the current user
+
+    if (allpassed) {
+      await db.problemsolved.upsert({
+        where: {
+          userId_problemId: {
+            problemId,
+            userId,
+          },
+        },
+        update: {},
+        create: {
+          userId,
+          problemId,
+        },
+      });
+    }
+
+    //save individual test case result using detailedResult
+
+    const testCaseResults = detailedResults.map((result) => ({
+      submissionId: submission.id,
+      testCase: result.testCase,
+      passed: result.passed,
+      stdout: result.stdout,
+      expected: result.expected,
+      stderr: result.stderr,
+      compileOutput: result.compile_output,
+      status: result.status,
+      memory: result.memory,
+      time: result.time,
+    }));
+
+    await db.testCaseResult.createMany({
+      data: testCaseResults,
+    });
+
+    const submissionWithTestCase = await db.submission.findUnique({
+      where: {
+        id: submission.id,
+      },
+      include: {
+        testCases: true,
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Code Executioned Successfully!!",
+      submission: submissionWithTestCase,
+    });
+  } catch (error) {
+    console.error("Error Executing Code: ", error.message);
+    res.status(500).json({
+      error: "Failed to Execute Code",
+    });
+  }
 };
