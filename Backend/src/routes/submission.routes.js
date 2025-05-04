@@ -1,7 +1,7 @@
 /** @format */
 
 import express from "express";
-import { authMiddleware } from "../middlewares/auth.middlewares";
+import { authMiddleware } from "../middlewares/auth.middlewares.js";
 import {
   getAllSubmission,
   getAllSubmissionForProblem,
@@ -15,7 +15,7 @@ submissionRoutes.get("/get-all-submissions", authMiddleware, getAllSubmission);
 submissionRoutes.get(
   "/get-submission/:problemId",
   authMiddleware,
-  getSubmissionsForProblem
+  getAllSubmissionForProblem
 );
 
 submissionRoutes.get(

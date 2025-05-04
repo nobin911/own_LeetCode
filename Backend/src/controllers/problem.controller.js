@@ -1,8 +1,7 @@
 /** @format */
 /** @format */
 
-import { db } from "../db/db.j";
-import { pollingBatchResults } from "../utils/judge0.utils.js";
+import { db } from "../db/db.js";
 import {
   getJudge0LanguageId,
   pollingBatchResults,
@@ -171,4 +170,34 @@ export const deleteProblem = async (req, res) => {
   }
 };
 
-export const getAllSolvedProblemsByUser = async (req, res) => {};
+export const getAllSolvedProblemsByUser = async (req, res) => {
+  try {
+    const problems = await db.problem.findMany({
+      where: {
+        solvedBy: {
+          some: {
+            userId: req.user.id,
+          },
+        },
+      },
+      include: {
+        solvedBy: {
+          where: {
+            userId: req.user.id,
+          },
+        },
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Problem Fetched Successfully",
+      problems,
+    });
+  } catch (error) {
+    console.error("Error fetching problems: ", error);
+    res.status(500).json({
+      error: "Failed to fetch problems",
+    });
+  }
+};

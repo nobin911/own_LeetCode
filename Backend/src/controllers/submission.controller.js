@@ -24,7 +24,7 @@ export const getAllSubmission = async (req, res) => {
   }
 };
 
-export const getSubmissionsForProblem = async (req, rs) => {
+export const getAllSubmissionForProblem = async (req, rs) => {
   try {
     const userId = req.user.id;
 
@@ -48,7 +48,7 @@ export const getSubmissionsForProblem = async (req, rs) => {
   }
 };
 
-export const getAllTheSubmissionForProblem = async (req, res) => {
+export const getAllTheSubmissionsForProblem = async (req, res) => {
   try {
     const problemId = req.params.problemId;
     const submissionCount = await db.submission.count({

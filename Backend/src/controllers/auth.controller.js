@@ -33,6 +33,7 @@ export const register = async (req, res) => {
     //hashing the password
 
     const hashedPassword = await bcrypt.hash(password, 10);
+
     // const verificationToken = crypto.randomBytes(32).toString("hex");
 
     const user = await db.user.create({
@@ -46,30 +47,31 @@ export const register = async (req, res) => {
 
     // send mail
 
-    const mailTransporter = nodemailer.createTransport({
-      host: process.env.MAIL_TRAP_HOST,
-      port: process.env.MAIL_TRAP_PORT,
-      secure: false, // true for port 465, false for other ports
-      auth: {
-        user: process.env.MAIL_TRAP_USERNAME,
-        pass: process.env.MAIL_TRAP_PASSWORD,
-      },
-    });
+    // const mailTransporter = nodemailer.createTransport({
+    //   host: process.env.MAIL_TRAP_HOST,
+    //   port: process.env.MAIL_TRAP_PORT,
+    //   secure: false, // true for port 465, false for other ports
+    //   auth: {
+    //     user: process.env.MAIL_TRAP_USERNAME,
+    //     pass: process.env.MAIL_TRAP_PASSWORD,
+    //   },
+    // });
 
-    const mailOptions = {
-      from: process.env.MAIL_TRAP_SENDER, // sender address
-      to: user.email, // list of receivers
-      subject: "verify account", // Subject line
-      text: `Please click the following link: ${process.env.BACKEND_BASE_URL}/api/v1/users/verify/${verificationToken}`,
-    };
+    // const mailOptions = {
+    //   from: process.env.MAIL_TRAP_SENDER, // sender address
+    //   to: user.email, // list of receivers
+    //   subject: "verify account", // Subject line
+    //   text: `Please click the following link: ${process.env.BACKEND_BASE_URL}/api/v1/users/verify/${verificationToken}`,
+    // };
 
-    await mailTransporter.sendMail(mailOptions);
+    // await mailTransporter.sendMail(mailOptions);
 
     //sending Success message
 
     res.status(201).json({
       success: true,
       message: "User Registered Successfully",
+      user,
     });
   } catch (error) {
     res.status(400).json({

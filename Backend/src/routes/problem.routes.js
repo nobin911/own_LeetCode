@@ -4,7 +4,6 @@ import { Router } from "express";
 import { authMiddleware, checkAdmin } from "../middlewares/auth.middlewares.js";
 import {
   createProblems,
-  deleteProblem,
   getAllProblems,
   getAllSolvedProblemsByUser,
   getProblemById,
