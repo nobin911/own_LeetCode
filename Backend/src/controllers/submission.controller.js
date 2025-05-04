@@ -47,3 +47,23 @@ export const getSubmissionsForProblem = async (req, rs) => {
     res.status(500).json({ error: "Failed to fetch submissions" });
   }
 };
+
+export const getAllTheSubmissionForProblem = async (req, res) => {
+  try {
+    const problemId = req.params.problemId;
+    const submissionCount = await db.submission.count({
+      where: {
+        problemId: problemId,
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Submissions Fetched Successfully",
+      count: submissionCount,
+    });
+  } catch (error) {
+    console.error("Fetching Submissions Error: ", error);
+    res.status(500).json({ error: "Failed to fetch submissions Count" });
+  }
+};
