@@ -8,16 +8,16 @@ import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
-  const { email, password, name } = req.body;
-
-  if (!email || !password || !name) {
-    return res.status(400).json({
-      success: false,
-      message: "All fields are required",
-    });
-  }
-
   try {
+    const { email, password, name } = req.body;
+
+    if (!email || !password || !name) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+      });
+    }
+
     const existingUser = await db.user.findUnique({
       where: {
         email,
@@ -30,9 +30,11 @@ export const register = async (req, res) => {
       });
     }
 
+    // console.log(email, password, name);
+
     //hashing the password
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // const hashedPassword = await bcrypt.hash(password, 10);
 
     // const verificationToken = crypto.randomBytes(32).toString("hex");
 
@@ -40,10 +42,12 @@ export const register = async (req, res) => {
       data: {
         name,
         email,
-        password: hashedPassword,
+        // password: hashedPassword,
         role: UserRole,
       },
     });
+
+    console.log(user);
 
     // send mail
 

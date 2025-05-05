@@ -5,7 +5,12 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 //importing custom routes
-import userRouter from "./routes/auth.routes.js";
+import userRoutes from "./src/routes/auth.routes.js";
+import problemRoutes from "./src/routes/problem.routes.js";
+import executionRoutes from "./src/routes/executeCode.routes.js";
+import submissionRoutes from "./src/routes/submission.routes.js";
+
+import playlistRoutes from ".src/routes/playlist.routes.js";
 
 //app initialization
 const app = express();
@@ -23,14 +28,20 @@ app.use(
   })
 );
 
+app.get("/", (req, res) => {
+  res.send("welcome judge0");
+});
+
 //routes
 
-app.use("/api/v1/users", userRouter);
+app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/problems", problemRoutes);
+app.use("/api/v1/submission", submissionRoutes);
+app.use("/api/v1/execute-code", executionRoutes);
+app.use("/api/v1/playlist", playlistRoutes);
 
 const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, () => {
   console.log(`Server is running on ${PORT}`);
 });
-
-// docker run --name my-postgres -e POSTGRES_USER=myuser -e POSTGRES_PASSWORD=mypassword -p 5432:5432 -d postgres

@@ -37,6 +37,7 @@ model User {
   Problems      Problem[]
   submission    Submission[]
   problemSolved ProblemSolved[]
+  playlists     PlayList[]
 }
 
 model Problem {
@@ -57,9 +58,10 @@ model Problem {
   updatedAt          DateTime   @default(now())
 
   //RelationShip
-  user       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  submission Submission[]
-  solvedBy   ProblemSolved[]
+  user             User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  submission       Submission[]
+  solvedBy         ProblemSolved[]
+  problemPlayLists ProblemInPlayList[]
 }
 
 model Submission {
@@ -118,4 +120,33 @@ model ProblemSolved {
   problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
 
   @@unique([userId, problemId])
+}
+
+model PlayList {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  userId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+
+  //relation
+  problems ProblemInPlayList[]
+  user     User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([name, userId]) //unique playlist names per user
+}
+
+model ProblemInPlayList {
+  id         String   @id @default(uuid())
+  playListId String
+  problemId  String
+  createdAt  DateTime @default(now())
+  upatedAt   DateTime @default(now())
+
+  // relationship
+  playlist PlayList @relation(fields: [id], references: [id], onDelete: Cascade)
+  problem  Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  @@unique([playListId, problemId])
 }
